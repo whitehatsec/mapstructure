@@ -12,5 +12,8 @@ on:
   
 jobs:
   pop-scans:
+    permissions:
+      contents: read
+      actions: read
     uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
     secrets: inherit
