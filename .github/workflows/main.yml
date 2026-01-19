@@ -12,8 +12,7 @@ on:
   
 jobs:
   pop-scans:
-    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
+    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@78dc941a967ce497a53306c3eec48035284285e0
     secrets: inherit
     with:
-      runs-on: ubuntu-latest 
       skip-pop-bd-docker-image-scan: true
