@@ -1,0 +1,18 @@
+name: PoP Scans 
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch: {}
+  
+jobs:
+  pop-scans:
+    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
+    secrets: inherit
+    with:
+      skip-pop-bd-docker-image-scan: true
