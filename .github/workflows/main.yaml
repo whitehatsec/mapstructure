@@ -1,4 +1,4 @@
-name: PoP Scans 
+name: mapstructure
 on:
   push:
     branches:
@@ -11,8 +11,10 @@ on:
   workflow_dispatch: {}
   
 jobs:
-  pop-scans:
-    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@sig-afrin-patch-3
+  go-module:
+    uses: whitehatsec/pipelines-library/.github/workflows/go-module.yaml@main
     secrets: inherit
     with:
-      skip-pop-bd-docker-image-scan: true
+      service_name: ${{ github.workflow }}
+      enable-cgo-dependencies: true
+      cgo-packages: "libdb-dev"
