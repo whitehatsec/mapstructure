@@ -1,0 +1,21 @@
+name: mapstructure
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  schedule:
+    - cron: '0 4 1 * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: whitehatsec/pipelines-library/.github/workflows/go-module.yaml@main
+    secrets: inherit
+    with:
+      service_name: ${{ github.workflow }}
