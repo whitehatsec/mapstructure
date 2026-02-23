@@ -63,7 +63,6 @@ jobs:
     secrets: inherit
     with:
       service_name: ${{ github.workflow }}
-      container-path: boulder-${{ github.event.repository.name }}
       skip-go-lint: false
   pop-scans:
     needs: collect-images
