@@ -9,19 +9,63 @@ on:
     branches:
       - master
       - main
+  workflow_call:
+    outputs:
+      image-names:
+        description: The full image names with tags that were built and pushed
+        value: ${{ jobs.collect-images.outputs.image-names }}
   schedule:
     - cron: '0 4 1 * *'
   workflow_dispatch: {}
 
 jobs:
+  container-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Building ${{ matrix.container-path }}
+        uses: whitehatsec/pipelines-library/github/actions/docker-build-helper@main
+        id: container-build
+        with:
+          dockerfile: ${{ matrix.dockerfile }}
+          container-path: ${{ matrix.container-path }}
+          context: .
+          registry: whitehatdev.azurecr.io
+          registry_user: ${{ secrets.ACRSPUSER }}
+          registry_password: ${{ secrets.ACRSPPASSWORD }}
+      - name: Save image name
+        run: |
+          mkdir -p /tmp/images
+          echo "${{ steps.container-build.outputs.image_name }}" > /tmp/images/${{ matrix.container-path }}.txt
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ matrix.container-path }}
+          path: /tmp/images/${{ matrix.container-path }}.txt
+  collect-images:
+    needs: container-build
+    runs-on: ubuntu-latest
+    outputs:
+      image-names: ${{ steps.combine.outputs.images }}
+    steps:
+      - name: Download all image artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: image-*
+          path: images
+      - name: Combine image names
+        id: combine
+        run: |
+          IMAGES=$(find images -name '*.txt' -exec cat {} \; | paste -sd ',')
+          echo "images=$IMAGES" >> $GITHUB_OUTPUT
+          echo "Combined images: $IMAGES"
   build:
     uses: whitehatsec/pipelines-library/.github/workflows/go-module.yaml@main
     secrets: inherit
     with:
       service_name: ${{ github.workflow }}
-  
   pop-scans:
-    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
+    needs: collect-images
     secrets: inherit
+    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
     with:
       skip-pop-bd-docker-image-scan: true
