@@ -11,7 +11,7 @@ on:
       - main
   schedule:
     - cron: '0 4 1 * *'
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   build:
@@ -19,3 +19,9 @@ jobs:
     secrets: inherit
     with:
       service_name: ${{ github.workflow }}
+  
+  pop-scans:
+    uses: whitehatsec/pipelines-library/.github/workflows/pop-scans.yaml@main
+    secrets: inherit
+    with:
+      skip-pop-bd-docker-image-scan: true
