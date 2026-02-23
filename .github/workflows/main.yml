@@ -58,12 +58,7 @@ jobs:
           IMAGES=$(find images -name '*.txt' -exec cat {} \; | paste -sd ',')
           echo "images=$IMAGES" >> $GITHUB_OUTPUT
           echo "Combined images: $IMAGES"
-  go-build:
-    uses: whitehatsec/pipelines-library/.github/workflows/go-service-build.yaml@main
-    secrets: inherit
-    with:
-      service_name: ${{ github.workflow }}
-      skip-go-lint: false
+
   pop-scans:
     needs: collect-images
     secrets: inherit
