@@ -1,5 +1,8 @@
 name: mapstructure
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GANDALF_GITHUB_TOKEN }}
+
 on:
   push:
     branches:
@@ -16,9 +19,8 @@ on:
 jobs:
   build:
     uses: whitehatsec/pipelines-library/.github/workflows/go-module.yaml@main
-    permissions:
-      contents: read
     secrets: inherit
     with:
       service_name: ${{ github.workflow }}
+    
 
