@@ -1,8 +1,5 @@
 name: mapstructure
 
-env:
-  GITHUB_TOKEN: ${{ secrets.GANDALF_GITHUB_TOKEN }}
-
 on:
   push:
     branches:
