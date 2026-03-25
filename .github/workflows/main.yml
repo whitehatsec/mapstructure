@@ -11,7 +11,7 @@ on:
       - main
   schedule:
     - cron: '0 4 1 * *'
-  workflow_dispatch:
+
 
 jobs:
   build:
@@ -19,3 +19,5 @@ jobs:
     secrets: inherit
     with:
       service_name: ${{ github.workflow }}
+    
+
